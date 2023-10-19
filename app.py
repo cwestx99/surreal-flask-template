@@ -1,28 +1,25 @@
-from flask import Flask
+from flask import Flask, request
+from surreal import create_todo, get_all_todos, update_todo
+import asyncio
+
 
 app = Flask(__name__)
 
 
 @app.route('/')
-def get_all_todo():
-    return '<h1>Hello, World!</h1>'
-
-
-@app.route("/<id>")
-def get_todo(id):
-    pass
+def home():
+    return asyncio.run(get_all_todos())
 
 
 @app.post('/add')
 def add_todo():
-    pass
+    input_json = request.get_json()
+    asyncio.run(create_todo(input_json))
+    return "success"
 
 
 @app.put('/edit/<id>')
-def edit_todo(id):
-    pass
-
-
-@app.delete('/<id>')
-def delete_todo(id):
-    pass
+def update_todo_by_id(id):
+    input_json = request.get_json()
+    asyncio.run(update_todo(id, input_json))
+    return "success"
